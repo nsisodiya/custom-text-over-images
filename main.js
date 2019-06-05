@@ -1,17 +1,27 @@
 var Jimp = require("jimp");
+var Papa = require("papaparse");
 
-function generateImages(obj) {
+async function generateImages(obj) {
   var fileNameIn = obj.src;
   var fileNameOut = obj.output;
-  obj.text.map(async function(imageCaption) {
+  var loadedImage = await Jimp.read(fileNameIn);
+  var jsonData = await convertCSVToJson(obj.csvFileName);
+  console.log("jsonData", jsonData);
+
+  jsonData.map(async function(person, i) {
     try {
-      console.log(`Processing started caption ${imageCaption}`);
-      var loadedImage = await Jimp.read(fileNameIn);
+      var Name = person.Name;
+      var LastName = person["Last Name"];
+      var ReferralCode = person["Referral Code"];
+      var uName = `${i}_${Name}_${LastName}`;
+      console.log(`Processing started caption ${uName}`);
+      var cImage = loadedImage.clone();
       var font = await Jimp.loadFont(Jimp[obj.font]);
-      loadedImage
-        .print(font, obj.position.x, obj.position.y, imageCaption)
-        .write(`${imageCaption}_${fileNameOut}`);
-      console.log(`Processing Done ${imageCaption}`);
+      cImage
+        .print(font, 1200, 710, Name)
+        .print(font, 1200, 2090, ReferralCode)
+        .write(`./out/${uName}_${fileNameOut}`);
+      console.log(`Processing Done ${uName}`);
     } catch (error) {
       console.error(error);
     }
@@ -19,12 +29,28 @@ function generateImages(obj) {
 }
 
 generateImages({
-  src: "home-banner.jpg",
-  output: "home-banner_${text}.jpg",
-  text: ["00000", "xyz", "99948585"],
-  position: {
-    x: 100,
-    y: 200
-  },
-  font: "FONT_SANS_16_BLACK"
+  src: "CareBear.png",
+  output: "CareBear.png",
+  csvFileName: "Data.csv",
+  font: "FONT_SANS_64_BLACK"
 });
+
+const readFilePromise = require("fs-readfile-promise");
+
+async function convertCSVToJson(fname) {
+  const buffer = await readFilePromise(fname);
+  var filecontent = buffer.toString(); //=> '... file contents ...'
+  var filecontentArr = filecontent.split("\n");
+  var header = filecontentArr[0].split(",");
+  var data = filecontentArr.shift();
+  var jsonData = [];
+  filecontentArr.map(function(str) {
+    var data = {};
+    var arr = str.split(",");
+    header.map(function(key, i) {
+      data[key] = arr[i];
+    });
+    jsonData.push(data);
+  });
+  return jsonData;
+}

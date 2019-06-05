@@ -18,6 +18,8 @@
   },
   "homepage": "https://github.com/nsisodiya/custom-text-over-images#readme",
   "dependencies": {
-    "jimp": "^0.6.4"
+    "fs-readfile-promise": "^3.0.1",
+    "jimp": "^0.6.4",
+    "papaparse": "^5.0.0"
   }
 }
