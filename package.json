@@ -1,0 +1,23 @@
+{
+  "name": "custom-text-over-images",
+  "version": "1.0.0",
+  "description": "Imagine you have one greeting card image and 100 guest and you want to generate 100 customised greeting card.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nsisodiya/custom-text-over-images.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nsisodiya/custom-text-over-images/issues"
+  },
+  "homepage": "https://github.com/nsisodiya/custom-text-over-images#readme",
+  "dependencies": {
+    "jimp": "^0.6.4"
+  }
+}
