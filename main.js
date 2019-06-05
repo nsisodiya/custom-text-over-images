@@ -1,30 +1,27 @@
 var Jimp = require("jimp");
 
-async function generateImages(obj) {
+function generateImages(obj) {
   var fileNameIn = obj.src;
   var fileNameOut = obj.output;
-  var imageCaption = obj.text[0];
-  var loadedImage;
-
-  Jimp.read(fileNameIn)
-    .then(function(image) {
-      loadedImage = image;
-      return Jimp.loadFont(Jimp[obj.font]);
-    })
-    .then(function(font) {
+  obj.text.map(async function(imageCaption) {
+    try {
+      console.log(`Processing started caption ${imageCaption}`);
+      var loadedImage = await Jimp.read(fileNameIn);
+      var font = await Jimp.loadFont(Jimp[obj.font]);
       loadedImage
         .print(font, obj.position.x, obj.position.y, imageCaption)
-        .write(fileNameOut);
-    })
-    .catch(function(err) {
-      console.error(err);
-    });
+        .write(`${imageCaption}_${fileNameOut}`);
+      console.log(`Processing Done ${imageCaption}`);
+    } catch (error) {
+      console.error(error);
+    }
+  });
 }
 
 generateImages({
   src: "home-banner.jpg",
   output: "home-banner_${text}.jpg",
-  text: ["abc", "xyz"],
+  text: ["00000", "xyz", "99948585"],
   position: {
     x: 100,
     y: 200
